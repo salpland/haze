@@ -1,0 +1,13 @@
+[package]
+name = "haze"
+version = "1.0.0"
+description = "A simple command line tool to save/test Minecraft Bedrock worlds"
+author = "Arexon <arexonreal@gmail.com>"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0.19", features = ["derive"] }
+miette = { version = "5.3.0", features = ["fancy"] }
+serde = { version = "1.0.147", features = ["derive"] }
+serde_json = "1.0.87"
+thiserror = "1.0.37"
