@@ -9,14 +9,23 @@ pub fn test(world_name: &str, local_worlds_dir: &str) -> HazeResult<()> {
     let from: PathBuf = [local_worlds_dir, world_name].iter().collect();
     let to = make_mojang_worlds_dir(world_name).map_err(HazeError::LocalAppData)?;
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))
+    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))?;
+
+    println!(
+        "Copied world '{}' to 'minecraftWorlds' for testing",
+        world_name
+    );
+    Ok(())
 }
 
 pub fn save(world_name: &str, local_worlds_dir: &str) -> HazeResult<()> {
     let from = make_mojang_worlds_dir(world_name).map_err(HazeError::LocalAppData)?;
     let to: PathBuf = [local_worlds_dir, world_name].iter().collect();
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))
+    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))?;
+
+    println!("Saved world '{}' to local worlds directory", world_name);
+    Ok(())
 }
 
 fn make_mojang_worlds_dir(name: &str) -> Result<PathBuf, io::Error> {
