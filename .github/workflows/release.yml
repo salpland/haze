@@ -1,0 +1,47 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+name: 🚚 Release
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform:
+          - { on: windows-latest, target: x86_64-pc-windows-msvc }
+          - { on: macos-latest, target: x86_64-apple-darwin }
+          - { on: macos-latest, target: aarch64-apple-darwin }
+          - { on: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+    name: 📦 Build (${{ matrix.platform.target }})
+    runs-on: ${{ matrix.platform.on }}
+    steps:
+      - name: 🔔 Checkout
+        uses: actions/checkout@v3
+      - name: 🦀 Setup Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.platform.target }}
+      - name: 🏗️ Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=${{ matrix.platform.target }}
+      - name: 📦 Compress binary (Windows)
+        if: ${{ startsWith(matrix.platform.os, 'windows') }}
+        run: Compress-Archive -CompressionLevel Optimal -Force -Path target/${{ matrix.platform.target }}/release/haze.exe -DestinationPath haze-${{ matrix.platform.target }}.zip
+      - name: 📦 Compress binary (Unix)
+        if: ${{ !startsWith(matrix.platform.os, 'windows') }}
+        run: |
+          mv target/${{ matrix.platform.target }}/release/haze haze
+          zip -r haze-${{ matrix.platform.target }}.zip haze
+      - name: 📤 Upload release binary
+        uses: softprops/action-gh-release@v1
+        with:
+          files: haze-${{ matrix.platform.target }}.zip
