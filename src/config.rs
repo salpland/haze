@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::fs;
 
-use crate::error::HazeResult;
+use crate::error::{HazeError, HazeResult};
 
 #[derive(Deserialize)]
 pub struct Config {
@@ -15,8 +15,8 @@ pub struct Packs {
 }
 
 pub fn load(path: &String) -> HazeResult<Config> {
-    let config = fs::read_to_string(path)?;
-    let config: Config = serde_json::from_str(&config)?;
+    let config = fs::read_to_string(path).map_err(HazeError::ConfigRead)?;
+    let config: Config = serde_json::from_str(&config).map_err(HazeError::ConfigParse)?;
 
     Ok(config)
 }

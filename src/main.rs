@@ -10,17 +10,11 @@ mod world;
 fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    match cli.command {
-        Command::Test { name } => {
-            println!("{}", name);
-        }
-        Command::Save { name } => {
-            println!("{}", name);
-        }
-    }
-
     let config = config::load(&cli.config)?;
-    println!("{}", config.packs.world_template);
+    match cli.command {
+        Command::Test { name } => world::test(&name, &config.packs.world_template)?,
+        Command::Save { name } => world::save(&name, &config.packs.world_template)?,
+    }
 
     Ok(())
 }
