@@ -1,7 +1,7 @@
 [package]
 name = "haze"
 version = "1.0.0"
-description = "A simple command line tool to save/test Minecraft Bedrock worlds"
+description = "A simple command line tool to manage your Minecraft Bedrock worlds"
 author = "Arexon <arexonreal@gmail.com>"
 edition = "2021"
 

@@ -1,6 +1,6 @@
 # Haze
 
-> A simple command line tool to save/test Minecraft Bedrock worlds
+> A simple command line tool to manage your Minecraft Bedrock worlds
 
 ## Why?
 
