@@ -12,13 +12,17 @@ jobs:
   build:
     strategy:
       matrix:
-        platform:
-          - { on: windows-latest, target: x86_64-pc-windows-msvc }
-          - { on: macos-latest, target: x86_64-apple-darwin }
-          - { on: macos-latest, target: aarch64-apple-darwin }
-          - { on: ubuntu-latest, target: x86_64-unknown-linux-gnu }
-    name: 📦 Build (${{ matrix.platform.target }})
-    runs-on: ${{ matrix.platform.on }}
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: macos-latest
+            target: x86_64-apple-darwin
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+    name: 📦 Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
     steps:
       - name: 🔔 Checkout
         uses: actions/checkout@v3
@@ -27,21 +31,21 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          target: ${{ matrix.platform.target }}
+          target: ${{ matrix.target }}
       - name: 🏗️ Build
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target=${{ matrix.platform.target }}
+          args: --release --target=${{ matrix.target }}
       - name: 📦 Compress binary (Windows)
-        if: ${{ startsWith(matrix.platform.os, 'windows') }}
-        run: Compress-Archive -CompressionLevel Optimal -Force -Path target/${{ matrix.platform.target }}/release/haze.exe -DestinationPath haze-${{ matrix.platform.target }}.zip
+        if: matrix.os == 'windows-latest'
+        run: Compress-Archive -CompressionLevel Optimal -Force -Path target/${{ matrix.target }}/release/haze.exe -DestinationPath haze-${{ matrix.target }}.zip
       - name: 📦 Compress binary (Unix)
-        if: ${{ !startsWith(matrix.platform.os, 'windows') }}
+        if: matrix.os != 'windows-latest'
         run: |
-          mv target/${{ matrix.platform.target }}/release/haze haze
-          zip -r haze-${{ matrix.platform.target }}.zip haze
+          mv target/${{ matrix.target }}/release/haze haze
+          zip -r haze-${{ matrix.target }}.zip haze
       - name: 📤 Upload release binary
         uses: softprops/action-gh-release@v1
         with:
-          files: haze-${{ matrix.platform.target }}.zip
+          files: haze-${{ matrix.target }}.zip
