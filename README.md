@@ -4,7 +4,7 @@
 
 ## Why?
 
-Haze takes on the idea of keeping a single source of truth for your worlds, similar to tools like [Regolith](https://github.com/Bedrock-OSS/regolith). This mechanism of moving worlds back and forth between Minecraft and your project folder allows you to work on mutliple worlds with ease. In addition, it makes it intuitive to integrate  source control tools such as Git without weird workarounds.
+Haze allows you to keep your project's worlds out of the `com.mojang` folder and place them in your project's folder instead. This way you can easily work on multiple worlds and move them back and forth between `com.mojang` and your project's folder.
 
 ![Diagram](.github/diagram.png)
 
