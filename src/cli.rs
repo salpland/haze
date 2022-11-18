@@ -13,8 +13,8 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Command {
-    /// Copy a world from the project's "world" folder into "minecraftWorlds"
+    /// Copy a world from the project's world folder into "minecraftWorlds"
     Test { name: String },
-    /// Copy a world from "minecraftWorlds" into the project's "world" folder
+    /// Copy a world from "minecraftWorlds" into the project's world folder
     Save { name: String },
 }
