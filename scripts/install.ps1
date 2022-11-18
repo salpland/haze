@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-$DownloadUrl = "https://github.com/sedgeland/haze/releases/latest/download/haze-x86_64-pc-windows-msvc.zip"
+$DownloadUrl = "https://github.com/sedgeland/haze/releases/latest/download/haze.zip"
 $BinDir = "${Home}\.haze"
 $HazeZip = "${BinDir}\haze.zip"
 $HazeExe = "${BinDir}\haze.exe"
