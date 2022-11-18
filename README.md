@@ -19,7 +19,7 @@ irm https://sedge.arexon.me/haze | iex
 
 Haze requires your project to include a config file that follows the [Project Config Standard](https://github.com/Bedrock-OSS/project-config-standard).
 
-This also means that you can integrate Haze into projects that use Regolith seamlessly.
+This also means that you can integrate Haze into projects that use [Regolith](https://github.com/Bedrock-OSS/regolith) or [bridge.'s Dash compiler](https://github.com/bridge-core/deno-dash-compiler) seamlessly.
 
 ### Setting up worlds
 
@@ -39,10 +39,10 @@ Run `haze --help` or reference the docs below:
 
 | Command | Description |
 | ------- | ----------- |
-| haze test \<NAME> | Copy a world from the project's worlds folder into "minecraftWorlds" |
-| haze save \<NAME> | Copy a world from "minecraftWorlds" into the project's worlds folder |
+| `haze test <NAME>` | Copy a world from the project's worlds folder into "minecraftWorlds" |
+| `haze save <NAME>` | Copy a world from "minecraftWorlds" into the project's worlds folder |
 
-Note: \<NAME> is the world folder name.
+Note: `<NAME>` is the world folder name.
 
 ## License
 
