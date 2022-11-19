@@ -40,6 +40,7 @@ Run `haze --help` or reference the docs below:
 | Command | Description |
 | ------- | ----------- |
 | `haze test <NAME>` | Copy a world from the project's worlds folder into "minecraftWorlds" |
+| `haze test --overwrite <NAME>` | Does the same as above but overwrites if the same world is already in "minecraftWorlds" |
 | `haze save <NAME>` | Copy a world from "minecraftWorlds" into the project's worlds folder |
 
 Note: `<NAME>` is the world folder name.
