@@ -1,3 +1,4 @@
+use colored::Colorize;
 use std::{
     env, fs, io,
     path::{Path, PathBuf},
@@ -10,16 +11,25 @@ pub fn test(world_name: &str, local_worlds_dir: &str, overwrite: bool) -> HazeRe
     let to = make_mojang_worlds_dir(world_name).map_err(HazeError::LocalAppData)?;
 
     if to.exists() && !overwrite {
-        Err(HazeError::OverwriteWorld(world_name.to_string()))?;
+        Err(HazeError::OverwriteWorld(
+            world_name.to_string().bold().underline(),
+        ))?;
     }
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))?;
+    copy_dir(from, to)
+        .map_err(|e| HazeError::WorldCopy(e, world_name.to_string().bold().underline()))?;
 
     if overwrite {
-        println!("Updated '{}' in 'minecraftWorlds' (overwrite)", world_name);
+        println!(
+            "Updated '{}' in '{}' ({})",
+            world_name,
+            "minecraftWorlds".bold(),
+            "overwrite".red()
+        );
     } else {
         println!(
-            "Copied world '{}' to 'minecraftWorlds' for testing",
+            "Copied world '{}' to '{}' for testing",
+            "minecraftWorlds".bold(),
             world_name
         );
     }
@@ -30,9 +40,13 @@ pub fn save(world_name: &str, local_worlds_dir: &str) -> HazeResult<()> {
     let from = make_mojang_worlds_dir(world_name).map_err(HazeError::LocalAppData)?;
     let to: PathBuf = [local_worlds_dir, world_name].iter().collect();
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))?;
+    copy_dir(from, to)
+        .map_err(|e| HazeError::WorldCopy(e, world_name.to_string().bold().underline()))?;
 
-    println!("Saved world '{}' to local worlds directory", world_name);
+    println!(
+        "Saved world '{}' to local worlds directory",
+        world_name.bold()
+    );
     Ok(())
 }
 

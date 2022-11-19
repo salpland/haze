@@ -10,7 +10,7 @@ mod world;
 fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    let config = config::load(&cli.config)?;
+    let config = config::load(cli.config)?;
     match cli.command {
         Command::Test { name, overwrite } => {
             world::test(&name, &config.packs.world_template, overwrite)?
