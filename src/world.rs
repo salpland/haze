@@ -5,16 +5,24 @@ use std::{
 
 use crate::error::{HazeError, HazeResult};
 
-pub fn test(world_name: &str, local_worlds_dir: &str) -> HazeResult<()> {
+pub fn test(world_name: &str, local_worlds_dir: &str, overwrite: bool) -> HazeResult<()> {
     let from: PathBuf = [local_worlds_dir, world_name].iter().collect();
     let to = make_mojang_worlds_dir(world_name).map_err(HazeError::LocalAppData)?;
 
+    if to.exists() && !overwrite {
+        Err(HazeError::OverwriteWorld(world_name.to_string()))?;
+    }
+
     copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, world_name.to_string()))?;
 
-    println!(
-        "Copied world '{}' to 'minecraftWorlds' for testing",
-        world_name
-    );
+    if overwrite {
+        println!("Updated '{}' in 'minecraftWorlds' (overwrite)", world_name);
+    } else {
+        println!(
+            "Copied world '{}' to 'minecraftWorlds' for testing",
+            world_name
+        );
+    }
     Ok(())
 }
 

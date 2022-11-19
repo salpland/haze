@@ -14,11 +14,18 @@ pub enum HazeError {
     #[diagnostic(code(haze::config::parse_error), help("{0}"))]
     ConfigParse(serde_json::Error),
 
+    #[error("unable to find local appdata directory")]
+    #[diagnostic(code(haze::world::local_appdata_error), help("{0}"))]
+    LocalAppData(io::Error),
+
     #[error("couldn't copy the world '{1}'")]
     #[diagnostic(code(haze::world::copy_error), help("{0}"))]
     WorldCopy(io::Error, String),
 
-    #[error("unable to find local appdata directory")]
-    #[diagnostic(code(haze::world::local_appdata_error), help("{0}"))]
-    LocalAppData(io::Error),
+    #[error("cannot overwrite the world '{0}' as it already exists in 'com.mojang'")]
+    #[diagnostic(
+        code(haze::world::cannot_overwrite_world),
+        help("do 'haze test --overwrite {0}' if you want to overwrite")
+    )]
+    OverwriteWorld(String),
 }

@@ -12,7 +12,9 @@ fn main() -> Result<()> {
 
     let config = config::load(&cli.config)?;
     match cli.command {
-        Command::Test { name } => world::test(&name, &config.packs.world_template)?,
+        Command::Test { name, overwrite } => {
+            world::test(&name, &config.packs.world_template, overwrite)?
+        }
         Command::Save { name } => world::save(&name, &config.packs.world_template)?,
     }
 
