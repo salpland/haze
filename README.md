@@ -2,7 +2,7 @@
 
 > A simple command line tool to manage your Minecraft Bedrock worlds
 
-Haze allows you to keep your project's worlds out of the `com.mojang` folder and place them in your project's folder instead. This way you can easily work on multiple worlds and move them back and forth between `com.mojang` and your project's folder.
+Haze allows you to keep your project's worlds out of the `com.mojang` directory and place them in your project's directory instead. This way you can easily work on multiple worlds and move them back and forth between `com.mojang` and your project's directory.
 
 ![Diagram](.github/diagram.png)
 
@@ -41,7 +41,7 @@ Run `haze --help` or reference the docs below:
 | `haze test --overwrite <NAME>` | Overwrites if a world with the same name is already in "minecraftWorlds" |
 | `haze save <NAME>` | Copy a world from "minecraftWorlds" to the project's worlds directory |
 
-Note: `<NAME>` is the world folder name.
+Note: `<NAME>` is the world directory name.
 
 ## 📝 License
 
