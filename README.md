@@ -28,9 +28,16 @@ Here is the required config:
 
 ```jsonc
 {
-  "packs": {
-    "worldTemplate": "./WT" // could also be "./packs/WT" or "./worlds"
-  }
+  // Now any world inside the "worlds" directory can be used in the command line argument.
+  "worlds": ["./worlds/*"],
+}
+```
+
+You can also reference multiple directories that store worlds:
+
+```jsonc
+{
+  "worlds": ["./worlds/dev/*", "./worlds/demo/*"],
 }
 ```
 
