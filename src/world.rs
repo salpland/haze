@@ -19,13 +19,15 @@ pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()
 
     if overwrite {
         println!(
-            "Updated world `{}` in `minecraftWorlds` directory ({})",
+            "{} world \"{}\" in the \"minecraftWorlds\" directory ({})",
+            "Updated".bold().green(),
             name,
             "overwrite".red()
         );
     } else {
         println!(
-            "Copied world `{}` to `minecraftWorlds` directory for testing",
+            "{} world \"{}\" to the \"minecraftWorlds\" directory for testing",
+            "Copied".bold().green(),
             name
         );
     }
@@ -38,7 +40,11 @@ pub fn save(name: String, worlds: Vec<String>) -> HazeResult<()> {
 
     copy_dir(from, to).map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.clone()))?;
 
-    println!("Saved world '{}' to local worlds directory", name);
+    println!(
+        "{} world \"{}\" to the local worlds directory",
+        "Saved".bold().green(),
+        name
+    );
     Ok(())
 }
 
