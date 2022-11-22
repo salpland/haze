@@ -2,6 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
+$IsInstalled = $false
 $DownloadUrl = "https://github.com/sedgeland/haze/releases/latest/download/haze.zip"
 $BinDir = "${Home}\.haze"
 $HazeZip = "${BinDir}\haze.zip"
@@ -9,6 +10,8 @@ $HazeExe = "${BinDir}\haze.exe"
 
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
+} else {
+  $IsInstalled = $true
 }
 
 curl.exe -Lo $HazeZip $DownloadUrl
@@ -22,5 +25,10 @@ if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
   $Env:Path += ";${BinDir}"
 }
 
-Write-Output "Haze was installed successfully to ${HazeExe}"
-Write-Output "Run 'haze --help' to get started"
+if ($IsInstalled -eq $true) {
+  Write-Output "Haze was updated successfully to the latest version"
+} else {
+  Write-Output "Haze was installed successfully to ${HazeExe}"
+  Write-Output "Run 'haze --help' to get started"
+}
+

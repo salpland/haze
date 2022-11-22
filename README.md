@@ -13,6 +13,9 @@ Open PowerShell on Windows and run:
 ```powershell
 irm https://sedge.arexon.me/haze | iex
 ```
+
+**You can also use this same command to update Haze.**
+
 ## 🧩 Usage
 
 Haze requires your project to include a config file that follows the [Project Config Standard](https://github.com/Bedrock-OSS/project-config-standard).
