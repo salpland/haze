@@ -1,4 +1,3 @@
-use colored::Colorize;
 use serde::Deserialize;
 use std::fs;
 
@@ -11,9 +10,9 @@ pub struct Config {
 
 pub fn load(path: String) -> HazeResult<Config> {
     let config = fs::read_to_string(&path)
-        .map_err(|e| HazeError::CannotReadConfig(e.kind(), path.clone().bold().underline()))?;
-    let config: Config = serde_json::from_str(&config)
-        .map_err(|e| HazeError::CannotParseConfig(e, path.bold().underline()))?;
+        .map_err(|e| HazeError::CannotReadConfig(e.kind(), path.clone()))?;
+    let config: Config =
+        serde_json::from_str(&config).map_err(|e| HazeError::CannotParseConfig(e, path))?;
 
     Ok(config)
 }

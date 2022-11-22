@@ -12,23 +12,20 @@ pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()
     let to = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
 
     if to.exists() && !overwrite {
-        Err(HazeError::CannotOverwriteWorld(name.bold().underline()))?;
+        return Err(HazeError::CannotOverwriteWorld(name));
     }
 
-    copy_dir(from, to)
-        .map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.to_string().bold().underline()))?;
+    copy_dir(from, to).map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.clone()))?;
 
     if overwrite {
         println!(
-            "Updated '{}' in '{}' ({})",
+            "Updated world `{}` in `minecraftWorlds` directory ({})",
             name,
-            "minecraftWorlds".bold(),
             "overwrite".red()
         );
     } else {
         println!(
-            "Copied world '{}' to '{}' for testing",
-            "minecraftWorlds".bold(),
+            "Copied world `{}` to `minecraftWorlds` directory for testing",
             name
         );
     }
@@ -39,10 +36,9 @@ pub fn save(name: String, worlds: Vec<String>) -> HazeResult<()> {
     let from = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
     let to: PathBuf = local_worlds_dir(worlds, name.clone())?;
 
-    copy_dir(from, to)
-        .map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.to_string().bold().underline()))?;
+    copy_dir(from, to).map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.clone()))?;
 
-    println!("Saved world '{}' to local worlds directory", name.bold());
+    println!("Saved world '{}' to local worlds directory", name);
     Ok(())
 }
 

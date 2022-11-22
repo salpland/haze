@@ -1,4 +1,3 @@
-use colored::ColoredString;
 use miette::Diagnostic;
 use std::{io, path::PathBuf};
 use thiserror::Error;
@@ -9,11 +8,11 @@ pub type HazeResult<T> = Result<T, HazeError>;
 pub enum HazeError {
     #[error("cannot read the config file at `{1}`")]
     #[diagnostic(help("{0}"))]
-    CannotReadConfig(io::ErrorKind, ColoredString),
+    CannotReadConfig(io::ErrorKind, String),
 
     #[error("the config file at `{1}` was not parsed")]
     #[diagnostic(help("{0}"))]
-    CannotParseConfig(serde_json::Error, ColoredString),
+    CannotParseConfig(serde_json::Error, String),
 
     #[error("the `worlds` config property is empty")]
     #[diagnostic(help("the property must include at least one pattern"))]
@@ -35,11 +34,11 @@ pub enum HazeError {
     #[diagnostic(help("{0}"))]
     CannotFindLocalAppData(io::ErrorKind),
 
-    #[error("couldn't copy the world `{1}`")]
+    #[error("cannot copy the world `{1}`")]
     #[diagnostic(help("{0}"))]
-    CannotCopyWorld(io::ErrorKind, ColoredString),
+    CannotCopyWorld(io::ErrorKind, String),
 
-    #[error("cannot overwrite the world `{0}` as it already exists in `com.mojang`")]
-    #[diagnostic(help("do \"haze test --overwrite {0}\" if you want to overwrite"))]
-    CannotOverwriteWorld(ColoredString),
+    #[error("cannot overwrite the world `{0}` as it already exists in `minecraftWorlds`")]
+    #[diagnostic(help("do \"haze test --overwrite {0}\" if you want to overwrite it"))]
+    CannotOverwriteWorld(String),
 }
