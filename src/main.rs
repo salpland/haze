@@ -12,7 +12,7 @@ fn main() -> Result<()> {
 
     let config = config::load(cli.config)?;
     match cli.command {
-        Command::Test { name, overwrite } => world::test(name, config.worlds, overwrite)?, // Command::Save { name } => world::save(&name, &config.worlds)?,
+        Command::Test { name, overwrite } => world::test(name, config.worlds, overwrite)?,
         Command::Save { name } => world::save(name, config.worlds)?,
     }
 
