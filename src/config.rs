@@ -6,13 +6,7 @@ use crate::error::{HazeError, HazeResult};
 
 #[derive(Deserialize)]
 pub struct Config {
-    pub packs: Packs,
-}
-
-#[derive(Deserialize)]
-pub struct Packs {
-    #[serde(rename = "worldTemplate")]
-    pub world_template: String,
+    pub worlds: Vec<String>,
 }
 
 pub fn load(path: String) -> HazeResult<Config> {

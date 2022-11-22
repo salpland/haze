@@ -1,6 +1,6 @@
 use colored::ColoredString;
 use miette::Diagnostic;
-use std::io;
+use std::{fmt, io, path::PathBuf, vec};
 use thiserror::Error;
 
 pub type HazeResult<T> = Result<T, HazeError>;
@@ -14,6 +14,22 @@ pub enum HazeError {
     #[error("config file at `{1}` was not parsed")]
     #[diagnostic(code(haze::config::parse_error), help("{0}"))]
     ConfigParse(serde_json::Error, ColoredString),
+
+    #[error("the `worlds` config property is empty")]
+    #[diagnostic(help("the property must include at least one pattern"))]
+    EmptyWorldsProperty,
+
+    #[error("invalid glob pattern in `worlds` property `{1}`")]
+    #[diagnostic(help("{0}"))]
+    InvalidWorldsGlobPattern(glob::PatternError, String),
+
+    #[error("cannot find a worlds directory from the defined patterns `{1:?}`")]
+    #[diagnostic(code(haze::config::invalid_glob_pattern_error), help("{0}"))]
+    WorldsDirectoryNotFound(io::ErrorKind, Vec<String>),
+
+    #[error("cannot find the world `{1}` in local worlds directory")]
+    #[diagnostic(help("available worlds: {0:?}"))]
+    WorldNotFound(Vec<PathBuf>, String),
 
     #[error("unable to find the local appdata directory")]
     #[diagnostic(code(haze::world::local_appdata_error), help("{0}"))]
