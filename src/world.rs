@@ -9,13 +9,14 @@ use crate::error::{HazeError, HazeResult};
 
 pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()> {
     let from: PathBuf = local_worlds_dir(worlds, name.clone())?;
-    let to = mojang_worlds_dir(&name).map_err(HazeError::LocalAppData)?;
+    let to = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
 
     if to.exists() && !overwrite {
-        Err(HazeError::OverwriteWorld(name.bold().underline()))?;
+        Err(HazeError::CannotOverwriteWorld(name.bold().underline()))?;
     }
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, name.to_string().bold().underline()))?;
+    copy_dir(from, to)
+        .map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.to_string().bold().underline()))?;
 
     if overwrite {
         println!(
@@ -35,10 +36,11 @@ pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()
 }
 
 pub fn save(name: String, worlds: Vec<String>) -> HazeResult<()> {
-    let from = mojang_worlds_dir(&name).map_err(HazeError::LocalAppData)?;
+    let from = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
     let to: PathBuf = local_worlds_dir(worlds, name.clone())?;
 
-    copy_dir(from, to).map_err(|e| HazeError::WorldCopy(e, name.to_string().bold().underline()))?;
+    copy_dir(from, to)
+        .map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.to_string().bold().underline()))?;
 
     println!("Saved world '{}' to local worlds directory", name.bold());
     Ok(())

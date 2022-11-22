@@ -7,13 +7,13 @@ pub type HazeResult<T> = Result<T, HazeError>;
 
 #[derive(Error, Diagnostic, Debug)]
 pub enum HazeError {
-    #[error("couldn't read config file at `{1}`")]
+    #[error("cannot read the config file at `{1}`")]
     #[diagnostic(help("{0}"))]
-    ConfigRead(io::Error, ColoredString),
+    CannotReadConfig(io::ErrorKind, ColoredString),
 
-    #[error("config file at `{1}` was not parsed")]
+    #[error("the config file at `{1}` was not parsed")]
     #[diagnostic(help("{0}"))]
-    ConfigParse(serde_json::Error, ColoredString),
+    CannotParseConfig(serde_json::Error, ColoredString),
 
     #[error("the `worlds` config property is empty")]
     #[diagnostic(help("the property must include at least one pattern"))]
@@ -33,13 +33,13 @@ pub enum HazeError {
 
     #[error("unable to find the local appdata directory")]
     #[diagnostic(help("{0}"))]
-    LocalAppData(io::Error),
+    CannotFindLocalAppData(io::ErrorKind),
 
     #[error("couldn't copy the world `{1}`")]
     #[diagnostic(help("{0}"))]
-    WorldCopy(io::Error, ColoredString),
+    CannotCopyWorld(io::ErrorKind, ColoredString),
 
     #[error("cannot overwrite the world `{0}` as it already exists in `com.mojang`")]
     #[diagnostic(help("do \"haze test --overwrite {0}\" if you want to overwrite"))]
-    OverwriteWorld(ColoredString),
+    CannotOverwriteWorld(ColoredString),
 }
