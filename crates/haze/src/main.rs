@@ -1,8 +1,9 @@
+mod cli;
+mod config;
+
 use clap::Parser;
 use cli::{Cli, Command};
-use haze_core::{config, world};
-
-mod cli;
+use haze_core::world;
 
 fn main() -> miette::Result<()> {
     let cli = Cli::parse();
