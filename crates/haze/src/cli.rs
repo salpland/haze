@@ -22,4 +22,6 @@ pub enum Command {
     },
     /// Copy a world from "minecraftWorlds" to the project's worlds directory
     Import { name: String },
+    /// List all worlds in the project's worlds directory
+    List,
 }

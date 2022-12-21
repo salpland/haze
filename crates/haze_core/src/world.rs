@@ -48,6 +48,33 @@ pub fn import(name: String, worlds: Vec<String>) -> HazeResult<()> {
     Ok(())
 }
 
+pub fn all_worlds(worlds_patterns: Vec<String>) -> HazeResult<Vec<String>> {
+    let mut worlds: Vec<String> = Vec::new();
+    for pattern in worlds_patterns.clone() {
+        for path in glob(&pattern).map_err(|e| HazeError::InvalidWorldsGlobPattern(e, pattern))? {
+            match path {
+                Ok(path) => {
+                    if let Some(file_name) = path.file_name() {
+                        worlds.push(file_name.to_string_lossy().to_string())
+                    }
+                }
+                Err(e) => {
+                    return Err(HazeError::WorldsDirectoryNotFound(
+                        e.error().kind(),
+                        worlds_patterns,
+                    ))
+                }
+            }
+        }
+    }
+
+    if worlds.is_empty() {
+        return Err(HazeError::EmptyWorldsProperty);
+    }
+
+    Ok(worlds)
+}
+
 fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> HazeResult<PathBuf> {
     let mut paths: Vec<PathBuf> = Vec::new();
     for pattern in worlds_patterns.clone() {
