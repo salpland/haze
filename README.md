@@ -50,6 +50,7 @@ Run `haze --help` or reference the docs below:
 | `haze test <NAME>` | Copy a world from the project's worlds directory to "minecraftWorlds" |
 | `haze test --overwrite <NAME>` | Overwrites if a world with the same name is already in "minecraftWorlds" |
 | `haze save <NAME>` | Copy a world from "minecraftWorlds" to the project's worlds directory |
+| `haze list` | Lists the available worlds in the project config |
 
 Note: `<NAME>` is the world directory name.
 
