@@ -14,12 +14,12 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Command {
     /// Copy a world from the project's worlds directory to "minecraftWorlds"
-    Test {
+    Export {
         name: String,
         /// Overwrite an already existing world with the same name
         #[arg(short, long)]
         overwrite: bool,
     },
     /// Copy a world from "minecraftWorlds" to the project's worlds directory
-    Save { name: String },
+    Import { name: String },
 }
