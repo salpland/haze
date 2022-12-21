@@ -1,9 +1,11 @@
 [package]
 name = "haze_core"
 version = "1.3.0"
+edition = "2021"
 description = "A simple command line tool to manage your Minecraft Bedrock worlds"
 author = "Arexon <arexonreal@gmail.com>"
-edition = "2021"
+repository = "https://github.com/sedgeland/haze/"
+license = "MIT"
 
 [dependencies]
 colored = "2.0.0"
