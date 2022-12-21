@@ -8,8 +8,8 @@ fn main() -> miette::Result<()> {
     let cli = Cli::parse();
     let config = config::load(cli.config)?;
     match cli.command {
-        Command::Test { name, overwrite } => world::test(name, config.worlds, overwrite)?,
-        Command::Save { name } => world::save(name, config.worlds)?,
+        Command::Export { name, overwrite } => world::export(name, config.worlds, overwrite)?,
+        Command::Import { name } => world::import(name, config.worlds)?,
     }
     Ok(())
 }

@@ -7,7 +7,7 @@ use std::{
 
 use crate::error::{HazeError, HazeResult};
 
-pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()> {
+pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()> {
     let from: PathBuf = local_worlds_dir(worlds, name.clone())?;
     let to = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
 
@@ -34,7 +34,7 @@ pub fn test(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()
     Ok(())
 }
 
-pub fn save(name: String, worlds: Vec<String>) -> HazeResult<()> {
+pub fn import(name: String, worlds: Vec<String>) -> HazeResult<()> {
     let from = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
     let to: PathBuf = local_worlds_dir(worlds, name.clone())?;
 
