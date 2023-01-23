@@ -11,7 +11,7 @@ Haze allows you to keep your project's worlds out of the `com.mojang` directory 
 Open PowerShell on Windows and run:
 
 ```powershell
-irm https://sedge.arexon.me/haze | iex
+irm irm https://raw.githubusercontent.com/salpland/haze/main/scripts/install.ps1 | iex | iex
 ```
 
 **You can also use this same command to update Haze.**
@@ -47,9 +47,9 @@ Run `haze --help` or reference the docs below:
 
 | Command | Description |
 | ------- | ----------- |
-| `haze test <NAME>` | Copy a world from the project's worlds directory to "minecraftWorlds" |
-| `haze test --overwrite <NAME>` | Overwrites if a world with the same name is already in "minecraftWorlds" |
-| `haze save <NAME>` | Copy a world from "minecraftWorlds" to the project's worlds directory |
+| `haze export <NAME>` | Copy a world from the project's worlds directory to "minecraftWorlds" |
+| `haze export --overwrite <NAME>` | Overwrites if a world with the same name is already in "minecraftWorlds" |
+| `haze import <NAME>` | Copy a world from "minecraftWorlds" to the project's worlds directory |
 | `haze list` | Lists the available worlds in the project config |
 
 Note: `<NAME>` is the world directory name.
