@@ -1,12 +1,14 @@
-use colored::Colorize;
-use glob::glob;
 use std::{
     env, fs, io,
     path::{Path, PathBuf},
 };
 
+use colored::Colorize;
+use glob::glob;
+
 use crate::error::Error;
 
+/// Exports the given world to the `minecraftWorlds` directory.
 pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> Result<(), Error> {
     let from: PathBuf = local_worlds_dir(worlds, name.clone())?;
     let to = mojang_worlds_dir(&name).map_err(|e| Error::CannotFindLocalAppData(e.kind()))?;
@@ -34,6 +36,7 @@ pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> Result<(), 
     Ok(())
 }
 
+/// Imports the given world from the `minecraftWorlds` directory.
 pub fn import(name: String, worlds: Vec<String>) -> Result<(), Error> {
     let from = mojang_worlds_dir(&name).map_err(|e| Error::CannotFindLocalAppData(e.kind()))?;
     let to: PathBuf = local_worlds_dir(worlds, name.clone())?;
@@ -48,9 +51,10 @@ pub fn import(name: String, worlds: Vec<String>) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn all_worlds(worlds_patterns: Vec<String>) -> Result<Vec<String>, Error> {
+/// Returns the list of worlds from the given glob patterns.
+pub fn all_worlds(globs: Vec<String>) -> Result<Vec<String>, Error> {
     let mut worlds: Vec<String> = Vec::new();
-    for pattern in worlds_patterns.clone() {
+    for pattern in globs.clone() {
         for path in glob(&pattern).map_err(|e| Error::InvalidWorldsGlobPattern(e, pattern))? {
             match path {
                 Ok(path) => {
@@ -60,12 +64,7 @@ pub fn all_worlds(worlds_patterns: Vec<String>) -> Result<Vec<String>, Error> {
                         }
                     }
                 }
-                Err(e) => {
-                    return Err(Error::WorldsDirectoryNotFound(
-                        e.error().kind(),
-                        worlds_patterns,
-                    ))
-                }
+                Err(e) => return Err(Error::WorldsDirectoryNotFound(e.error().kind(), globs)),
             }
         }
     }
@@ -77,9 +76,10 @@ pub fn all_worlds(worlds_patterns: Vec<String>) -> Result<Vec<String>, Error> {
     Ok(worlds)
 }
 
-fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> Result<PathBuf, Error> {
+/// Returns local worlds directory from the given glob patterns.
+fn local_worlds_dir(globs: Vec<String>, name: String) -> Result<PathBuf, Error> {
     let mut paths: Vec<PathBuf> = Vec::new();
-    for pattern in worlds_patterns.clone() {
+    for pattern in globs.clone() {
         for path in glob(&pattern).map_err(|e| Error::InvalidWorldsGlobPattern(e, pattern))? {
             match path {
                 Ok(path) => {
@@ -87,12 +87,7 @@ fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> Result<PathBu
                         paths.push(path);
                     }
                 }
-                Err(e) => {
-                    return Err(Error::WorldsDirectoryNotFound(
-                        e.error().kind(),
-                        worlds_patterns,
-                    ))
-                }
+                Err(e) => return Err(Error::WorldsDirectoryNotFound(e.error().kind(), globs)),
             }
         }
     }
@@ -107,6 +102,7 @@ fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> Result<PathBu
     Ok(path.clone())
 }
 
+/// Returns the path to the mojang worlds directory.
 fn mojang_worlds_dir(name: &str) -> Result<PathBuf, io::Error> {
     let base = env::var("LOCALAPPDATA").unwrap();
 
@@ -124,6 +120,7 @@ fn mojang_worlds_dir(name: &str) -> Result<PathBuf, io::Error> {
     .collect())
 }
 
+/// Copies a directory recursively.
 fn copy_dir(from: impl AsRef<Path>, to: impl AsRef<Path>) -> Result<(), io::Error> {
     fs::create_dir_all(&to)?;
 

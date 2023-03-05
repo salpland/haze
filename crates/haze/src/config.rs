@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::fs;
 
-use haze_core::error::Error;
+use haze_core::Error;
 
 #[derive(Deserialize)]
 pub struct Config {

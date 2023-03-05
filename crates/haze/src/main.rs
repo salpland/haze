@@ -3,16 +3,15 @@ mod config;
 
 use clap::Parser;
 use cli::{Cli, Command};
-use haze_core::world;
 
 fn main() -> miette::Result<()> {
     let cli = Cli::parse();
     let config = config::load(cli.config)?;
     match cli.command {
-        Command::Export { name, overwrite } => world::export(name, config.worlds, overwrite)?,
-        Command::Import { name } => world::import(name, config.worlds)?,
+        Command::Export { name, overwrite } => haze_core::export(name, config.worlds, overwrite)?,
+        Command::Import { name } => haze_core::import(name, config.worlds)?,
         Command::List => {
-            let worlds = world::all_worlds(config.worlds)?;
+            let worlds = haze_core::all_worlds(config.worlds)?;
 
             println!("Available Worlds:");
 

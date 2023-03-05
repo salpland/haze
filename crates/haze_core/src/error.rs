@@ -2,6 +2,7 @@ use miette::Diagnostic;
 use std::{io, path::PathBuf};
 use thiserror::Error;
 
+/// The library error type.
 #[derive(Error, Diagnostic, Debug)]
 pub enum Error {
     #[error("cannot read the config file at `{1}`")]
