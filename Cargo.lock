@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "haze"
-version = "1.3.0"
+version = "1.4.0"
 dependencies = [
  "clap",
  "haze_core",
@@ -164,7 +164,7 @@ dependencies = [
 
 [[package]]
 name = "haze_core"
-version = "1.3.0"
+version = "1.4.0"
 dependencies = [
  "glob",
  "miette",
