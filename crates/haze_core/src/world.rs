@@ -6,9 +6,9 @@ use std::{
 use crate::error::Error;
 
 /// Exports the given world to the `minecraftWorlds` directory.
-pub fn export(name: &str, worlds: &[String], overwrite: bool) -> Result<(), Error> {
+pub fn export(name: &str, worlds: &[String], target: &str, overwrite: bool) -> Result<(), Error> {
     let from = local_worlds_dir(worlds, name)?;
-    let to = mojang_worlds_dir(name)?;
+    let to = mojang_worlds_dir(name, target)?;
 
     if to.exists() && !overwrite {
         return Err(Error::CannotOverwriteWorld(name.to_string()));
@@ -20,8 +20,8 @@ pub fn export(name: &str, worlds: &[String], overwrite: bool) -> Result<(), Erro
 }
 
 /// Imports the given world from the `minecraftWorlds` directory.
-pub fn import(name: &str, worlds: &[String]) -> Result<(), Error> {
-    let from = mojang_worlds_dir(name)?;
+pub fn import(name: &str, worlds: &[String], target: &str) -> Result<(), Error> {
+    let from = mojang_worlds_dir(name, target)?;
     let to: PathBuf = local_worlds_dir(worlds, name)?;
 
     copy_dir(&from, &to).map_err(|e| Error::CannotCopyWorld(e.kind(), name.to_string()))?;
@@ -76,12 +76,19 @@ fn local_worlds_dir(globs: &[String], name: &str) -> Result<PathBuf, Error> {
 }
 
 /// Returns the path to the mojang worlds directory.
-fn mojang_worlds_dir(name: &str) -> Result<PathBuf, Error> {
+fn mojang_worlds_dir(name: &str, target: &str) -> Result<PathBuf, Error> {
+    let target = match target {
+        "stable" => "Microsoft.MinecraftUWP_8wekyb3d8bbwe",
+        "preview" => "Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe",
+        "education" => "Microsoft.MinecraftEducationEdition_8wekyb3d8bbwe",
+        path => return Ok(PathBuf::from(path)),
+    };
+
     env::var("LOCALAPPDATA")
         .map(|base| {
             PathBuf::from(&base)
                 .join("Packages")
-                .join("Microsoft.MinecraftUWP_8wekyb3d8bbwe")
+                .join(target)
                 .join("LocalState")
                 .join("games")
                 .join("com.mojang")

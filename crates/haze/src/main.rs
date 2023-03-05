@@ -10,8 +10,12 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let config = config::load(cli.config)?;
     match cli.command {
-        Command::Export { name, overwrite } => {
-            haze_core::export(&name, &config.worlds, overwrite)?;
+        Command::Export {
+            name,
+            overwrite,
+            path,
+        } => {
+            haze_core::export(&name, &config.worlds, &path, overwrite)?;
             if overwrite {
                 println!(
                     "{} world \"{}\" in the \"minecraftWorlds\" directory ({})",
@@ -27,8 +31,8 @@ fn main() -> Result<()> {
                 );
             }
         }
-        Command::Import { name } => {
-            haze_core::import(&name, &config.worlds)?;
+        Command::Import { name, path } => {
+            haze_core::import(&name, &config.worlds, &path)?;
             println!(
                 "{} world \"{}\" to the local worlds directory",
                 "Saved".bold().green(),
