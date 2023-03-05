@@ -1,18 +1,17 @@
 use serde::Deserialize;
 use std::fs;
 
-use haze_core::error::{HazeError, HazeResult};
+use haze_core::error::Error;
 
 #[derive(Deserialize)]
 pub struct Config {
     pub worlds: Vec<String>,
 }
 
-pub fn load(path: String) -> HazeResult<Config> {
-    let config = fs::read_to_string(&path)
-        .map_err(|e| HazeError::CannotReadConfig(e.kind(), path.clone()))?;
-    let config: Config =
-        serde_json::from_str(&config).map_err(|e| HazeError::CannotParseConfig(e, path))?;
+pub fn load(path: String) -> Result<Config, Error> {
+    let config =
+        fs::read_to_string(&path).map_err(|e| Error::CannotReadConfig(e.kind(), path.clone()))?;
+    let config = serde_json::from_str(&config).map_err(|e| Error::CannotParseConfig(e, path))?;
 
     Ok(config)
 }

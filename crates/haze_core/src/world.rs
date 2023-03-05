@@ -5,17 +5,17 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::error::{HazeError, HazeResult};
+use crate::error::Error;
 
-pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<()> {
+pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> Result<(), Error> {
     let from: PathBuf = local_worlds_dir(worlds, name.clone())?;
-    let to = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
+    let to = mojang_worlds_dir(&name).map_err(|e| Error::CannotFindLocalAppData(e.kind()))?;
 
     if to.exists() && !overwrite {
-        return Err(HazeError::CannotOverwriteWorld(name));
+        return Err(Error::CannotOverwriteWorld(name));
     }
 
-    copy_dir(from, to).map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.clone()))?;
+    copy_dir(from, to).map_err(|e| Error::CannotCopyWorld(e.kind(), name.clone()))?;
 
     if overwrite {
         println!(
@@ -34,11 +34,11 @@ pub fn export(name: String, worlds: Vec<String>, overwrite: bool) -> HazeResult<
     Ok(())
 }
 
-pub fn import(name: String, worlds: Vec<String>) -> HazeResult<()> {
-    let from = mojang_worlds_dir(&name).map_err(|e| HazeError::CannotFindLocalAppData(e.kind()))?;
+pub fn import(name: String, worlds: Vec<String>) -> Result<(), Error> {
+    let from = mojang_worlds_dir(&name).map_err(|e| Error::CannotFindLocalAppData(e.kind()))?;
     let to: PathBuf = local_worlds_dir(worlds, name.clone())?;
 
-    copy_dir(from, to).map_err(|e| HazeError::CannotCopyWorld(e.kind(), name.clone()))?;
+    copy_dir(from, to).map_err(|e| Error::CannotCopyWorld(e.kind(), name.clone()))?;
 
     println!(
         "{} world \"{}\" to the local worlds directory",
@@ -48,10 +48,10 @@ pub fn import(name: String, worlds: Vec<String>) -> HazeResult<()> {
     Ok(())
 }
 
-pub fn all_worlds(worlds_patterns: Vec<String>) -> HazeResult<Vec<String>> {
+pub fn all_worlds(worlds_patterns: Vec<String>) -> Result<Vec<String>, Error> {
     let mut worlds: Vec<String> = Vec::new();
     for pattern in worlds_patterns.clone() {
-        for path in glob(&pattern).map_err(|e| HazeError::InvalidWorldsGlobPattern(e, pattern))? {
+        for path in glob(&pattern).map_err(|e| Error::InvalidWorldsGlobPattern(e, pattern))? {
             match path {
                 Ok(path) => {
                     if path.is_dir() {
@@ -61,7 +61,7 @@ pub fn all_worlds(worlds_patterns: Vec<String>) -> HazeResult<Vec<String>> {
                     }
                 }
                 Err(e) => {
-                    return Err(HazeError::WorldsDirectoryNotFound(
+                    return Err(Error::WorldsDirectoryNotFound(
                         e.error().kind(),
                         worlds_patterns,
                     ))
@@ -71,16 +71,16 @@ pub fn all_worlds(worlds_patterns: Vec<String>) -> HazeResult<Vec<String>> {
     }
 
     if worlds.is_empty() {
-        return Err(HazeError::EmptyWorldsProperty);
+        return Err(Error::EmptyWorldsProperty);
     }
 
     Ok(worlds)
 }
 
-fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> HazeResult<PathBuf> {
+fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> Result<PathBuf, Error> {
     let mut paths: Vec<PathBuf> = Vec::new();
     for pattern in worlds_patterns.clone() {
-        for path in glob(&pattern).map_err(|e| HazeError::InvalidWorldsGlobPattern(e, pattern))? {
+        for path in glob(&pattern).map_err(|e| Error::InvalidWorldsGlobPattern(e, pattern))? {
             match path {
                 Ok(path) => {
                     if path.is_dir() {
@@ -88,7 +88,7 @@ fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> HazeResult<Pa
                     }
                 }
                 Err(e) => {
-                    return Err(HazeError::WorldsDirectoryNotFound(
+                    return Err(Error::WorldsDirectoryNotFound(
                         e.error().kind(),
                         worlds_patterns,
                     ))
@@ -98,10 +98,10 @@ fn local_worlds_dir(worlds_patterns: Vec<String>, name: String) -> HazeResult<Pa
     }
 
     if paths.is_empty() {
-        return Err(HazeError::EmptyWorldsProperty);
+        return Err(Error::EmptyWorldsProperty);
     }
     let Some(path) = paths.iter().find(|p| p.ends_with(&name)) else {
-        return Err(HazeError::WorldNotFound(paths, name));
+        return Err(Error::WorldNotFound(paths, name));
     };
 
     Ok(path.clone())

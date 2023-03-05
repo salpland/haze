@@ -2,10 +2,8 @@ use miette::Diagnostic;
 use std::{io, path::PathBuf};
 use thiserror::Error;
 
-pub type HazeResult<T> = Result<T, HazeError>;
-
 #[derive(Error, Diagnostic, Debug)]
-pub enum HazeError {
+pub enum Error {
     #[error("cannot read the config file at `{1}`")]
     #[diagnostic(help("{0}"))]
     CannotReadConfig(io::ErrorKind, String),
