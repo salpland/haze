@@ -6,9 +6,9 @@ author = "Arexon <arexonreal@gmail.com>"
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.0.19", features = ["derive"] }
-miette = { version = "5.3.0", features = ["fancy"] }
-serde = { version = "1.0.147", features = ["derive"] }
-serde_json = "1.0.87"
-haze_core = { path = "../haze_core" }
-owo-colors = "3.5.0"
+clap.workspace = true
+haze_core.workspace = true
+miette.workspace = true
+owo-colors.workspace = true
+serde_json.workspace = true
+serde.workspace = true
