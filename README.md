@@ -49,7 +49,9 @@ Run `haze --help` or reference the docs below:
 | ------- | ----------- |
 | `haze export <NAME>` | Copy a world from the project's worlds directory to "minecraftWorlds" |
 | `haze export --overwrite <NAME>` | Overwrites if a world with the same name is already in "minecraftWorlds" |
+| `haze export --path [stable, preview, education, <CUSTOM>]` | Predefined or custom export path |
 | `haze import <NAME>` | Copy a world from "minecraftWorlds" to the project's worlds directory |
+| `haze import --path [stable, preview, education, <CUSTOM>] <NAME>` | Predefined or custom import path |
 | `haze list` | Lists the available worlds in the project config |
 
 Note: `<NAME>` is the world directory name.
