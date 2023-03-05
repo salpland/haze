@@ -21,17 +21,12 @@ pub enum Error {
     #[diagnostic(help("{0}"))]
     InvalidWorldsGlobPattern(glob::PatternError, String),
 
-    #[error("cannot find a worlds directory from the defined patterns `{1:?}`")]
-    #[diagnostic(help("{0}"))]
-    WorldsDirectoryNotFound(io::ErrorKind, Vec<String>),
-
     #[error("cannot find the world `{1}` in local worlds directory")]
     #[diagnostic(help("available worlds: {0:?}"))]
     WorldNotFound(Vec<PathBuf>, String),
 
     #[error("unable to find the local appdata directory")]
-    #[diagnostic(help("{0}"))]
-    CannotFindLocalAppData(io::ErrorKind),
+    CannotFindLocalAppData(),
 
     #[error("cannot copy the world `{1}`")]
     #[diagnostic(help("{0}"))]

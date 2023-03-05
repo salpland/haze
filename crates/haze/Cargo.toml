@@ -11,3 +11,4 @@ miette = { version = "5.3.0", features = ["fancy"] }
 serde = { version = "1.0.147", features = ["derive"] }
 serde_json = "1.0.87"
 haze_core = { path = "../haze_core" }
+owo-colors = "3.5.0"
