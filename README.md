@@ -11,7 +11,7 @@ Haze allows you to keep your project's worlds out of the `com.mojang` directory 
 Open PowerShell on Windows and run:
 
 ```powershell
-irm irm https://raw.githubusercontent.com/salpland/haze/main/scripts/install.ps1 | iex | iex
+irm https://raw.githubusercontent.com/salpland/haze/main/scripts/install.ps1 | iex
 ```
 
 **You can also use this same command to update Haze.**
