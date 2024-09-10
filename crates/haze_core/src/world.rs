@@ -9,11 +9,12 @@ use crate::error::Error;
 pub fn export(name: &str, worlds: &[String], target: &str, overwrite: bool) -> Result<(), Error> {
     let from = local_worlds_dir(worlds, name)?;
     let to = mojang_worlds_dir(name, target)?;
-
-    if to.exists() && !overwrite {
-        return Err(Error::CannotOverwriteWorld(name.to_string()));
+    if to.exists() {
+        if !overwrite {
+            return Err(Error::CannotOverwriteWorld(name.to_string()));
+        }
+        delete_dir(&to)?;
     }
-
     copy_dir(&from, &to).map_err(|e| Error::CannotCopyWorld(e.kind(), name.to_string()))?;
 
     Ok(())
@@ -23,7 +24,14 @@ pub fn export(name: &str, worlds: &[String], target: &str, overwrite: bool) -> R
 pub fn import(name: &str, worlds: &[String], target: &str) -> Result<(), Error> {
     let from = mojang_worlds_dir(name, target)?;
     let to: PathBuf = local_worlds_dir(worlds, name)?;
-
+    if check_access(&from).is_err() {
+        return Err(Error::CannotAccessDirectory(
+            from.to_string_lossy().to_string(),
+        ));
+    }
+    if to.exists() {
+        delete_dir(&to)?;
+    }
     copy_dir(&from, &to).map_err(|e| Error::CannotCopyWorld(e.kind(), name.to_string()))?;
 
     Ok(())
@@ -113,5 +121,49 @@ fn copy_dir(from: &Path, to: &Path) -> Result<(), io::Error> {
         }
     }
 
+    Ok(())
+}
+
+/// Tries to access all files in the directory. Returns an error if access to any file is denied.
+fn check_access(target: &Path) -> Result<(), io::Error> {
+    check_access_helper(target)
+}
+
+fn check_access_helper(target: &Path) -> Result<(), io::Error> {
+    for entry in fs::read_dir(target)? {
+        let entry = entry?;
+        let file_type = entry.file_type()?;
+        if file_type.is_dir() {
+            check_access_helper(&entry.path())?;
+        } else {
+            // Open a file and immediately close it to check if it's accessible.
+            fs::OpenOptions::new()
+                .read(true)
+                .write(true)
+                .open(entry.path())?;
+        }
+    }
+    Ok(())
+}
+
+/// Deletes a directory recursively. Before deleting files, it tries to open them first to check if
+/// they are locked by another process. Only delets the directory if all files are accessible.
+///
+/// WARNING: This function is not atomic. It's possible that some other process will lock the file
+/// after it's checked and before it's deleted.
+fn delete_dir(target: &Path) -> Result<(), Error> {
+    // Check if any of the files in the directory are locked by another process.
+    if check_access(target).is_err() {
+        return Err(Error::CannotDeleteDirectory(
+            target.to_string_lossy().to_string(),
+        ));
+    }
+
+    // Delete the directory
+    if fs::remove_dir_all(target).is_err() {
+        return Err(Error::CriticalDeleteDirectory(
+            target.to_string_lossy().to_string(),
+        ));
+    };
     Ok(())
 }
